@@ -26,6 +26,11 @@ var tasklist = /*#__PURE__*/function () {
   }
 
   _createClass(tasklist, [{
+    key: "geraIdRecado",
+    value: function geraIdRecado() {
+      return this.recados.length + 1;
+    }
+  }, {
     key: "registraEventoBtnAdicionar",
     value: function registraEventoBtnAdicionar() {
       var _this = this;
@@ -40,8 +45,8 @@ var tasklist = /*#__PURE__*/function () {
       var _this2 = this;
 
       document.querySelectorAll(".botao-deletar").forEach(function (item) {
-        item.onclick = function () {
-          return _this2.deletaMensagem();
+        item.onclick = function (event) {
+          return _this2.deletaMensagem(event);
         };
       });
     }
@@ -56,8 +61,8 @@ var tasklist = /*#__PURE__*/function () {
       try {
         for (_iterator.s(); !(_step = _iterator.n()).done;) {
           var recado = _step.value;
-          var position = this.recados.indexOf(recado);
-          this.caixaRecados.innerHTML += this.criaCartaoMensagem(recado.titulo, recado.mensagem, position);
+          var cardHtml = this.criaCartaoMensagem(recado.id, recado.titulo, recado.mensagem);
+          this.inserirHtml(cardHtml);
         }
       } catch (err) {
         _iterator.e(err);
@@ -70,26 +75,38 @@ var tasklist = /*#__PURE__*/function () {
   }, {
     key: "novaMensagem",
     value: function novaMensagem() {
+      var id = this.geraIdRecado();
       var titulo = this.tituloInput.value;
       var mensagem = this.mensagemInput.value;
       this.tituloInput.value = "";
       this.mensagemInput.value = "";
       this.recados.push({
+        id: id,
         titulo: titulo,
         mensagem: mensagem
       });
+      console.log(this.recados);
       this.criarRecados();
     }
   }, {
     key: "deletaMensagem",
-    value: function deletaMensagem(position) {
-      this.recados.splice(position, 1);
-      this.criarRecados();
+    value: function deletaMensagem(event) {
+      event.path[2].remove();
+      var idRecado = event.path[2].getAttribute("id-scrap");
+      var indiceRecado = this.recados.findIndex(function (item) {
+        return item.id == idRecado;
+      });
+      this.recados.splice(indiceRecado, 1);
+    }
+  }, {
+    key: "inserirHtml",
+    value: function inserirHtml(html) {
+      this.caixaRecados.innerHTML += html;
     }
   }, {
     key: "criaCartaoMensagem",
-    value: function criaCartaoMensagem(titulo, mensagem) {
-      return "\n    <div class=\"message-cards card text-white bg-dark m-2 col-3\">\n    <div class=\"card-header font-weight-bold\">".concat(titulo, "</div>\n    <div class=\"card-body\">\n      <p class=\"card-text\">\n        ").concat(mensagem, "\n      </p>\n    </div>\n    <div class=\"w-100 d-flex justify-content-end pr-2 pb-2\">\n      <button class=\"btn btn-danger mr-1 botao-deletar\">Deletar</button>\n      <button class=\"btn btn-info\">Editar</button>\n    </div>\n  </div>\n  ");
+    value: function criaCartaoMensagem(id, titulo, mensagem) {
+      return "\n    <div class=\"message-cards card text-white bg-dark m-2 col-3 id-scrap=\"".concat(id, "\">\n    <div class=\"card-header font-weight-bold\">").concat(titulo, "</div>\n    <div class=\"card-body\">\n      <p class=\"card-text\">\n        ").concat(mensagem, "\n      </p>\n    </div>\n    <div class=\"w-100 d-flex justify-content-end pr-2 pb-2\">\n      <button class=\"btn btn-danger mr-1 botao-deletar\">Deletar</button>\n      <button class=\"btn btn-info\">Editar</button>\n    </div>\n  </div>\n  ");
     }
   }]);
 

@@ -11,13 +11,17 @@ class tasklist {
     this.registraEventoBtnAdicionar();
   }
 
+  geraIdRecado() {
+    return this.recados.length + 1;
+  }
+
   registraEventoBtnAdicionar() {
     this.adicionar.onclick = () => this.novaMensagem();
   }
 
   botaoEventos() {
     document.querySelectorAll(".botao-deletar").forEach((item) => {
-      item.onclick = () => this.deletaMensagem();
+      item.onclick = (event) => this.deletaMensagem(event);
     });
   }
 
@@ -25,36 +29,50 @@ class tasklist {
     this.caixaRecados.innerHTML = "";
 
     for (const recado of this.recados) {
-      let position = this.recados.indexOf(recado);
-
-      this.caixaRecados.innerHTML += this.criaCartaoMensagem(
-        recado.titulo, recado.mensagem, position
+      const cardHtml = this.criaCartaoMensagem(
+        recado.id, recado.titulo, recado.mensagem
       );
+
+      this.inserirHtml(cardHtml);
     }
 
     this.botaoEventos();
   }
 
   novaMensagem() {
-    let titulo = this.tituloInput.value;
-    let mensagem = this.mensagemInput.value;
+    const id = this.geraIdRecado();
+    const titulo = this.tituloInput.value;
+    const mensagem = this.mensagemInput.value;
 
     this.tituloInput.value = "";
     this.mensagemInput.value = "";
-    this.recados.push({ titulo, mensagem })
 
-    this.criarRecados()
-  }
+    this.recados.push({ id, titulo, mensagem })
 
-  deletaMensagem(position) {
-    this.recados.splice(position, 1);
+    console.log(this.recados);
 
     this.criarRecados();
-  };
+  }
 
-  criaCartaoMensagem(titulo, mensagem) {
+  deletaMensagem(event) {
+    event.path[2].remove();
+
+    const idRecado = event.path[2].getAttribute("id-scrap");
+
+    const indiceRecado = this.recados.findIndex(item => {
+      return item.id == idRecado
+    })
+
+    this.recados.splice(indiceRecado, 1);
+  }
+
+  inserirHtml(html) {
+    this.caixaRecados.innerHTML += html;
+  }
+
+  criaCartaoMensagem(id, titulo, mensagem) {
     return `
-    <div class="message-cards card text-white bg-dark m-2 col-3">
+    <div class="message-cards card text-white bg-dark m-2 col-3 id-scrap="${id}">
     <div class="card-header font-weight-bold">${titulo}</div>
     <div class="card-body">
       <p class="card-text">
