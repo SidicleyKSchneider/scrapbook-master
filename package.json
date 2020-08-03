@@ -4,5 +4,10 @@
   "main": "index.js",
   "repository": "https://github.com/SidicleyKSchneider/scrapbook-master.git",
   "author": "Sidicley Schneider <sidi.fev@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "@babel/cli": "^7.10.5",
+    "@babel/core": "^7.11.0",
+    "@babel/preset-env": "^7.11.0"
+  }
 }
