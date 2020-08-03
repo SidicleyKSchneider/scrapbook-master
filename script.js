@@ -2,42 +2,37 @@ let tituloInput = document.getElementById('titleInput');
 let mensagemInput = document.getElementById('messageField');
 let adicionar = document.getElementById('bnt');
 let container = document.querySelector('.container');
-let caixaRecados= document.getElementById('caixa-recados')
-let editTexto= document.getElementById('editTitleInput')
+let caixaRecados = document.getElementById('caixa-recados')
+let editTexto = document.getElementById('editTitleInput')
 let editMessagem = document.getElementById('editMessageField')
-let salveedit= document.getElementById('saveEdit');
+let salveedit = document.getElementById('saveEdit');
+let recados = [];
 
-
-
- 
-let recados = [] ; 
-
-function criarRecados(){
-   caixaRecados.innerHTML= '';
-   for (const recado of recados) {
-      let position = recados.indexOf(recado);
-      caixaRecados.innerHTML += criaCartaoMensagem(recado.titulo,recado.mensagem,position);
-   }
+function criarRecados() {
+  caixaRecados.innerHTML = '';
+  for (const recado of recados) {
+    let position = recados.indexOf(recado);
+    caixaRecados.innerHTML += criaCartaoMensagem(recado.titulo, recado.mensagem, position);
+  }
 }
 
-
-
-function novaMensagem(){
-  if(!tituloInput.value || !mensagemInput.value){
+function novaMensagem() {
+  if (!tituloInput.value || !mensagemInput.value) {
     alert('O titulo e a mensagem deve se digitadas!')
-    return;} 
+    return;
+  }
   let titulo = tituloInput.value;
   let mensagem = mensagemInput.value;
 
   tituloInput.value = '';
-  mensagemInput.value= '';
-  recados.push({titulo,mensagem})
+  mensagemInput.value = '';
+  recados.push({ titulo, mensagem })
 
   criarRecados()
 }
 
-function deletarMensagem(position){
-  if(!confirm('Deseja realmente apagar esta mensagem?'))return;
+function deletarMensagem(position) {
+  if (!confirm('Deseja realmente apagar esta mensagem?')) return;
 
   alert('Mensagem apagada com sucesso!')
   recados.splice(position, 1)
@@ -45,8 +40,8 @@ function deletarMensagem(position){
   criarRecados();
 }
 
-function criaCartaoMensagem(titulo,mensagem, position){
-  return`
+function criaCartaoMensagem(titulo, mensagem, position) {
+  return `
   <div class="message-cards card text-white bg-dark m-2 col-3">
   <div class="card-header font-weight-bold">${titulo}</div>
   <div class="card-body">
@@ -59,26 +54,25 @@ function criaCartaoMensagem(titulo,mensagem, position){
     <button class="btn btn-info" onclick="openEditModal(${position})">Editar</button>
   </div>
 </div>
-`;}
+`;
+}
 
-
-
- function openEditModal(position){
+function openEditModal(position) {
   $('#editModal').modal('toggle');
- editTexto.value = recados[position].titulo;
-editMessagem.value = recados[position].mensagem;
+  editTexto.value = recados[position].titulo;
+  editMessagem.value = recados[position].mensagem;
 
-salveedit.setAttribute('onclick',`saveChanges(${position})`);
- }
+  salveedit.setAttribute('onclick', `saveChanges(${position})`);
+}
 
-function saveChanges(position){
- 
-  if(!confirm('Você realmente deseja salvar esta mensagem?')) return;
+function saveChanges(position) {
+
+  if (!confirm('Você realmente deseja salvar esta mensagem?')) return;
   alert('Mensagem salva com sucesso!')
   $("#editModal").modal("hide");
- recados[position].titulo = editTexto.value;
- recados[position].mensagem = editMessagem.value ;
- criarRecados();
+  recados[position].titulo = editTexto.value;
+  recados[position].mensagem = editMessagem.value;
+  criarRecados();
 }
 
 criarRecados();
