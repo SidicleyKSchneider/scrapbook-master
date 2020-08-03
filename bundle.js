@@ -35,6 +35,17 @@ var tasklist = /*#__PURE__*/function () {
       };
     }
   }, {
+    key: "botaoEventos",
+    value: function botaoEventos() {
+      var _this2 = this;
+
+      document.querySelectorAll(".botao-deletar").forEach(function (item) {
+        item.onclick = function () {
+          return _this2.deletaMensagem();
+        };
+      });
+    }
+  }, {
     key: "criarRecados",
     value: function criarRecados() {
       this.caixaRecados.innerHTML = "";
@@ -45,13 +56,16 @@ var tasklist = /*#__PURE__*/function () {
       try {
         for (_iterator.s(); !(_step = _iterator.n()).done;) {
           var recado = _step.value;
-          this.caixaRecados.innerHTML += this.criaCartaoMensagem(recado.titulo, recado.mensagem);
+          var position = this.recados.indexOf(recado);
+          this.caixaRecados.innerHTML += this.criaCartaoMensagem(recado.titulo, recado.mensagem, position);
         }
       } catch (err) {
         _iterator.e(err);
       } finally {
         _iterator.f();
       }
+
+      this.botaoEventos();
     }
   }, {
     key: "novaMensagem",
@@ -67,9 +81,15 @@ var tasklist = /*#__PURE__*/function () {
       this.criarRecados();
     }
   }, {
+    key: "deletaMensagem",
+    value: function deletaMensagem(position) {
+      this.recados.splice(position, 1);
+      this.criarRecados();
+    }
+  }, {
     key: "criaCartaoMensagem",
     value: function criaCartaoMensagem(titulo, mensagem) {
-      return "\n    <div class=\"message-cards card text-white bg-dark m-2 col-3\">\n    <div class=\"card-header font-weight-bold\">".concat(titulo, "</div>\n    <div class=\"card-body\">\n      <p class=\"card-text\">\n        ").concat(mensagem, "\n      </p>\n    </div>\n    <div class=\"w-100 d-flex justify-content-end pr-2 pb-2\">\n      <button class=\"btn btn-danger mr-1\">Apagar</button>\n      <button class=\"btn btn-info\">Editar</button>\n    </div>\n  </div>\n  ");
+      return "\n    <div class=\"message-cards card text-white bg-dark m-2 col-3\">\n    <div class=\"card-header font-weight-bold\">".concat(titulo, "</div>\n    <div class=\"card-body\">\n      <p class=\"card-text\">\n        ").concat(mensagem, "\n      </p>\n    </div>\n    <div class=\"w-100 d-flex justify-content-end pr-2 pb-2\">\n      <button class=\"btn btn-danger mr-1 botao-deletar\">Deletar</button>\n      <button class=\"btn btn-info\">Editar</button>\n    </div>\n  </div>\n  ");
     }
   }]);
 

@@ -15,12 +15,24 @@ class tasklist {
     this.adicionar.onclick = () => this.novaMensagem();
   }
 
+  botaoEventos() {
+    document.querySelectorAll(".botao-deletar").forEach((item) => {
+      item.onclick = () => this.deletaMensagem();
+    });
+  }
+
   criarRecados() {
     this.caixaRecados.innerHTML = "";
 
     for (const recado of this.recados) {
-      this.caixaRecados.innerHTML += this.criaCartaoMensagem(recado.titulo, recado.mensagem)
+      let position = this.recados.indexOf(recado);
+
+      this.caixaRecados.innerHTML += this.criaCartaoMensagem(
+        recado.titulo, recado.mensagem, position
+      );
     }
+
+    this.botaoEventos();
   }
 
   novaMensagem() {
@@ -34,6 +46,12 @@ class tasklist {
     this.criarRecados()
   }
 
+  deletaMensagem(position) {
+    this.recados.splice(position, 1);
+
+    this.criarRecados();
+  };
+
   criaCartaoMensagem(titulo, mensagem) {
     return `
     <div class="message-cards card text-white bg-dark m-2 col-3">
@@ -44,7 +62,7 @@ class tasklist {
       </p>
     </div>
     <div class="w-100 d-flex justify-content-end pr-2 pb-2">
-      <button class="btn btn-danger mr-1">Apagar</button>
+      <button class="btn btn-danger mr-1 botao-deletar">Deletar</button>
       <button class="btn btn-info">Editar</button>
     </div>
   </div>
