@@ -19,7 +19,10 @@ var tasklist = /*#__PURE__*/function () {
     this.tituloInput = document.getElementById('titleInput');
     this.mensagemInput = document.getElementById('messageField');
     this.adicionar = document.getElementById('bnt');
-    this.caixaRecados = document.getElementById('caixa-recados'); // console.log(this.tituloInput, this.mensagemInput, this.adicionar);
+    this.caixaRecados = document.getElementById('caixa-recados');
+    this.editTexto = document.getElementById("editTitleInput");
+    this.editMessagem = document.getElementById("editMessageField");
+    this.salveedit = document.getElementById("saveEdit"); // console.log(this.tituloInput, this.mensagemInput, this.adicionar);
 
     this.recados = [];
     this.registraEventoBtnAdicionar();
@@ -47,6 +50,11 @@ var tasklist = /*#__PURE__*/function () {
       document.querySelectorAll(".botao-deletar").forEach(function (item) {
         item.onclick = function (event) {
           return _this2.deletaMensagem(event);
+        };
+      });
+      document.querySelectorAll(".botao-editar").forEach(function (item) {
+        item.onclick = function (event) {
+          return _this2.openEditModal(event);
         };
       });
     }
@@ -84,8 +92,8 @@ var tasklist = /*#__PURE__*/function () {
         id: id,
         titulo: titulo,
         mensagem: mensagem
-      });
-      console.log(this.recados);
+      }); // console.log(this.recados);
+
       this.criarRecados();
     }
   }, {
@@ -104,9 +112,38 @@ var tasklist = /*#__PURE__*/function () {
       this.caixaRecados.innerHTML += html;
     }
   }, {
+    key: "openEditModal",
+    value: function openEditModal(event) {
+      var _this3 = this;
+
+      $("#editModal").modal("toggle");
+      var idRecado = event.path[2].getAttribute("id-scrap");
+      var indiceRecado = this.recados.findIndex(function (item) {
+        return item.id == idRecado;
+      });
+      this.editTexto.value = this.recados[indiceRecado].titulo;
+      this.editMessagem.value = this.recados[indiceRecado].mensagem;
+
+      this.salveedit.onclick = function () {
+        return _this3.saveChanges(indiceRecado);
+      };
+    }
+  }, {
+    key: "saveChanges",
+    value: function saveChanges(indiceRecado) {
+      var titulo = this.editTexto.value;
+      var mensagem = this.editMessagem.value;
+      this.recados[indiceRecado] = {
+        titulo: titulo,
+        mensagem: mensagem
+      };
+      this.criarRecados();
+      $("#editModal").modal("hide");
+    }
+  }, {
     key: "criaCartaoMensagem",
     value: function criaCartaoMensagem(id, titulo, mensagem) {
-      return "\n    <div class=\"message-cards card text-white bg-dark m-2 col-3 id-scrap=\"".concat(id, "\">\n    <div class=\"card-header font-weight-bold\">").concat(titulo, "</div>\n    <div class=\"card-body\">\n      <p class=\"card-text\">\n        ").concat(mensagem, "\n      </p>\n    </div>\n    <div class=\"w-100 d-flex justify-content-end pr-2 pb-2\">\n      <button class=\"btn btn-danger mr-1 botao-deletar\">Deletar</button>\n      <button class=\"btn btn-info\">Editar</button>\n    </div>\n  </div>\n  ");
+      return "\n    <div class=\"message-cards card text-white bg-dark m-2 col-3 id-scrap=\"".concat(id, "\">\n    <div class=\"card-header font-weight-bold\">").concat(titulo, "</div>\n    <div class=\"card-body\">\n      <p class=\"card-text\">\n        ").concat(mensagem, "\n      </p>\n    </div>\n    <div class=\"w-100 d-flex justify-content-end pr-2 pb-2\">\n      <button class=\"btn btn-danger mr-1 botao-deletar\">Deletar</button>\n    <button class=\"btn btn-info botao-editar\">Editar</button>\n    </div>\n  </div>\n  ");
     }
   }]);
 

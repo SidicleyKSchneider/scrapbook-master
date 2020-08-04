@@ -4,6 +4,9 @@ class tasklist {
     this.mensagemInput = document.getElementById('messageField');
     this.adicionar = document.getElementById('bnt');
     this.caixaRecados = document.getElementById('caixa-recados')
+    this.editTexto = document.getElementById("editTitleInput")
+    this.editMessagem = document.getElementById("editMessageField")
+    this.salveedit = document.getElementById("saveEdit");
 
     // console.log(this.tituloInput, this.mensagemInput, this.adicionar);
     this.recados = [];
@@ -22,6 +25,10 @@ class tasklist {
   botaoEventos() {
     document.querySelectorAll(".botao-deletar").forEach((item) => {
       item.onclick = (event) => this.deletaMensagem(event);
+    });
+
+    document.querySelectorAll(".botao-editar").forEach((item) => {
+      item.onclick = (event) => this.openEditModal(event);
     });
   }
 
@@ -49,7 +56,7 @@ class tasklist {
 
     this.recados.push({ id, titulo, mensagem })
 
-    console.log(this.recados);
+    // console.log(this.recados);
 
     this.criarRecados();
   }
@@ -59,7 +66,7 @@ class tasklist {
 
     const idRecado = event.path[2].getAttribute("id-scrap");
 
-    const indiceRecado = this.recados.findIndex(item => {
+    const indiceRecado = this.recados.findIndex((item) => {
       return item.id == idRecado
     })
 
@@ -68,6 +75,30 @@ class tasklist {
 
   inserirHtml(html) {
     this.caixaRecados.innerHTML += html;
+  }
+
+  openEditModal(event) {
+    $("#editModal").modal("toggle");
+
+    const idRecado = event.path[2].getAttribute("id-scrap");
+
+    const indiceRecado = this.recados.findIndex((item) => {
+      return item.id == idRecado
+    })
+    this.editTexto.value = this.recados[indiceRecado].titulo;
+    this.editMessagem.value = this.recados[indiceRecado].mensagem;
+
+    this.salveedit.onclick = () => this.saveChanges(indiceRecado);
+  }
+
+  saveChanges(indiceRecado) {
+
+    let titulo = this.editTexto.value;
+    let mensagem = this.editMessagem.value;
+
+    this.recados[indiceRecado] = { titulo, mensagem };
+    this.criarRecados();
+    $("#editModal").modal("hide");
   }
 
   criaCartaoMensagem(id, titulo, mensagem) {
@@ -81,7 +112,7 @@ class tasklist {
     </div>
     <div class="w-100 d-flex justify-content-end pr-2 pb-2">
       <button class="btn btn-danger mr-1 botao-deletar">Deletar</button>
-      <button class="btn btn-info">Editar</button>
+    <button class="btn btn-info botao-editar">Editar</button>
     </div>
   </div>
   `;
