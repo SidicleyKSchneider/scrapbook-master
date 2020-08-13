@@ -1,14 +1,14 @@
 {
-  "name": "scrapbook-master",
+  "name": "simple-scrapbook",
   "version": "1.0.0",
   "main": "index.js",
-  "repository": "https://github.com/SidicleyKSchneider/scrapbook-master.git",
-  "author": "Sidicley Schneider <sidi.fev@gmail.com>",
+  "repository": "https://github.com/djunior97/simple-scrapbook.git",
+  "author": "dirceuAntunes <dirceu.antunes@garupa.co>",
   "license": "MIT",
   "dependencies": {
     "@babel/cli": "^7.10.5",
-    "@babel/core": "^7.11.0",
-    "@babel/preset-env": "^7.11.0"
+    "@babel/core": "^7.10.5",
+    "@babel/preset-env": "^7.10.4"
   },
   "scripts": {
     "dev": "babel ./main.js -o ./bundle.js -w"

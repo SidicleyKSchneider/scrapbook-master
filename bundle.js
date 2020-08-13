@@ -12,65 +12,64 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-var tasklist = /*#__PURE__*/function () {
-  function tasklist() {
-    _classCallCheck(this, tasklist);
+var TaskList = /*#__PURE__*/function () {
+  function TaskList() {
+    _classCallCheck(this, TaskList);
 
-    this.tituloInput = document.getElementById('titleInput');
-    this.mensagemInput = document.getElementById('messageField');
-    this.adicionar = document.getElementById('bnt');
-    this.caixaRecados = document.getElementById('caixa-recados');
-    this.editTexto = document.getElementById("editTitleInput");
-    this.editMessagem = document.getElementById("editMessageField");
-    this.salveedit = document.getElementById("saveEdit"); // console.log(this.tituloInput, this.mensagemInput, this.adicionar);
-
-    this.recados = [];
-    this.registraEventoBtnAdicionar();
+    this.titleInput = document.getElementById("messageTitle");
+    this.editTitleInput = document.getElementById("editMessageTitle");
+    this.messageInput = document.getElementById("messageBody");
+    this.editMessageInput = document.getElementById("editMessageBody");
+    this.addBtn = document.getElementById("addButton");
+    this.btnSaveEdit = document.getElementById("saveEdit");
+    this.scrapsField = document.getElementById("scrapsField");
+    this.scraps = [];
+    this.registerAddScrapBtnEvent();
   }
 
-  _createClass(tasklist, [{
-    key: "geraIdRecado",
-    value: function geraIdRecado() {
-      return this.recados.length + 1;
+  _createClass(TaskList, [{
+    key: "generateScrapId",
+    value: function generateScrapId() {
+      return this.scraps.length + 1;
     }
   }, {
-    key: "registraEventoBtnAdicionar",
-    value: function registraEventoBtnAdicionar() {
+    key: "registerAddScrapBtnEvent",
+    value: function registerAddScrapBtnEvent() {
       var _this = this;
 
-      this.adicionar.onclick = function () {
-        return _this.novaMensagem();
+      this.addBtn.onclick = function () {
+        return _this.addNewScrap();
       };
     }
   }, {
-    key: "botaoEventos",
-    value: function botaoEventos() {
+    key: "setButtonEvents",
+    value: function setButtonEvents() {
       var _this2 = this;
 
-      document.querySelectorAll(".botao-deletar").forEach(function (item) {
+      document.querySelectorAll(".delete-button").forEach(function (item) {
         item.onclick = function (event) {
-          return _this2.deletaMensagem(event);
+          return _this2.deleteScrap(event);
         };
       });
-      document.querySelectorAll(".botao-editar").forEach(function (item) {
+      document.querySelectorAll(".edit-button").forEach(function (item) {
         item.onclick = function (event) {
           return _this2.openEditModal(event);
         };
       });
     }
   }, {
-    key: "criarRecados",
-    value: function criarRecados() {
-      this.caixaRecados.innerHTML = "";
+    key: "renderScraps",
+    value: function renderScraps() {
+      this.scrapsField.innerHTML = "";
 
-      var _iterator = _createForOfIteratorHelper(this.recados),
+      var _iterator = _createForOfIteratorHelper(this.scraps),
           _step;
 
       try {
         for (_iterator.s(); !(_step = _iterator.n()).done;) {
-          var recado = _step.value;
-          var cardHtml = this.criaCartaoMensagem(recado.id, recado.titulo, recado.mensagem);
-          this.inserirHtml(cardHtml);
+          var scrap = _step.value;
+          var cardHtml = this.createScrapCard(scrap.id, scrap.title, scrap.message);
+          this.insertHtml(cardHtml);
         }
       } catch (err) {
         _iterator.e(err);
@@ -78,38 +77,37 @@ var tasklist = /*#__PURE__*/function () {
         _iterator.f();
       }
 
-      this.botaoEventos();
+      this.setButtonEvents();
     }
   }, {
-    key: "novaMensagem",
-    value: function novaMensagem() {
-      var id = this.geraIdRecado();
-      var titulo = this.tituloInput.value;
-      var mensagem = this.mensagemInput.value;
-      this.tituloInput.value = "";
-      this.mensagemInput.value = "";
-      this.recados.push({
+    key: "addNewScrap",
+    value: function addNewScrap() {
+      var id = this.generateScrapId();
+      var title = this.titleInput.value;
+      var message = this.messageInput.value;
+      this.titleInput.value = "";
+      this.messageInput.value = "";
+      this.scraps.push({
         id: id,
-        titulo: titulo,
-        mensagem: mensagem
-      }); // console.log(this.recados);
-
-      this.criarRecados();
-    }
-  }, {
-    key: "deletaMensagem",
-    value: function deletaMensagem(event) {
-      event.path[2].remove();
-      var idRecado = event.path[2].getAttribute("id-scrap");
-      var indiceRecado = this.recados.findIndex(function (item) {
-        return item.id == idRecado;
+        title: title,
+        message: message
       });
-      this.recados.splice(indiceRecado, 1);
+      this.renderScraps();
     }
   }, {
-    key: "inserirHtml",
-    value: function inserirHtml(html) {
-      this.caixaRecados.innerHTML += html;
+    key: "deleteScrap",
+    value: function deleteScrap(event) {
+      event.path[2].remove();
+      var scrapId = event.path[2].getAttribute("id-scrap");
+      var scrapIndex = this.scraps.findIndex(function (item) {
+        return item.id == scrapId;
+      });
+      this.scraps.splice(scrapIndex, 1);
+    }
+  }, {
+    key: "insertHtml",
+    value: function insertHtml(html) {
+      this.scrapsField.innerHTML += html;
     }
   }, {
     key: "openEditModal",
@@ -117,37 +115,37 @@ var tasklist = /*#__PURE__*/function () {
       var _this3 = this;
 
       $("#editModal").modal("toggle");
-      var idRecado = event.path[2].getAttribute("id-scrap");
-      var indiceRecado = this.recados.findIndex(function (item) {
-        return item.id == idRecado;
+      var scrapId = event.path[2].getAttribute("id-scrap");
+      var scrapIndex = this.scraps.findIndex(function (item) {
+        return item.id == scrapId;
       });
-      this.editTexto.value = this.recados[indiceRecado].titulo;
-      this.editMessagem.value = this.recados[indiceRecado].mensagem;
+      this.editTitleInput.value = this.scraps[scrapIndex].title;
+      this.editMessageInput.value = this.scraps[scrapIndex].message;
 
-      this.salveedit.onclick = function () {
-        return _this3.saveChanges(indiceRecado);
+      this.btnSaveEdit.onclick = function () {
+        return _this3.saveChanges(scrapIndex);
       };
     }
   }, {
     key: "saveChanges",
-    value: function saveChanges(indiceRecado) {
-      var titulo = this.editTexto.value;
-      var mensagem = this.editMessagem.value;
-      this.recados[indiceRecado] = {
-        titulo: titulo,
-        mensagem: mensagem
+    value: function saveChanges(scrapIndex) {
+      var title = this.editTitleInput.value;
+      var message = this.editMessageInput.value;
+      this.scraps[scrapIndex] = {
+        title: title,
+        message: message
       };
-      this.criarRecados();
+      this.renderScraps();
       $("#editModal").modal("hide");
     }
   }, {
-    key: "criaCartaoMensagem",
-    value: function criaCartaoMensagem(id, titulo, mensagem) {
-      return "\n    <div class=\"message-cards card text-white bg-dark m-2 col-3 id-scrap=\"".concat(id, "\">\n    <div class=\"card-header font-weight-bold\">").concat(titulo, "</div>\n    <div class=\"card-body\">\n      <p class=\"card-text\">\n        ").concat(mensagem, "\n      </p>\n    </div>\n    <div class=\"w-100 d-flex justify-content-end pr-2 pb-2\">\n      <button class=\"btn btn-danger mr-1 botao-deletar\">Deletar</button>\n    <button class=\"btn btn-info botao-editar\">Editar</button>\n    </div>\n  </div>\n  ");
+    key: "createScrapCard",
+    value: function createScrapCard(id, title, message) {
+      return "\n    <div class=\"message-cards card text-white bg-dark m-2 col-3\" id-scrap=\"".concat(id, "\">\n      <div class=\"card-header font-weight-bold\">").concat(title, "</div>\n      <div class=\"card-body\">\n        <p class=\"card-text\">\n          ").concat(message, "\n        </p>\n      </div>\n      <div class=\"w-100 d-flex justify-content-end pr-2 pb-2\">\n        <button class=\"btn btn-danger mr-1 delete-button\">Deletar</button>\n        <button class=\"btn btn-info edit-button\">Editar</button>\n      </div>\n    </div>\n    ");
     }
   }]);
 
-  return tasklist;
+  return TaskList;
 }();
 
-new tasklist();
+new TaskList();

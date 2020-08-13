@@ -1,122 +1,121 @@
-class tasklist {
+class TaskList {
   constructor() {
-    this.tituloInput = document.getElementById('titleInput');
-    this.mensagemInput = document.getElementById('messageField');
-    this.adicionar = document.getElementById('bnt');
-    this.caixaRecados = document.getElementById('caixa-recados')
-    this.editTexto = document.getElementById("editTitleInput")
-    this.editMessagem = document.getElementById("editMessageField")
-    this.salveedit = document.getElementById("saveEdit");
+    this.titleInput = document.getElementById("messageTitle");
+    this.editTitleInput = document.getElementById("editMessageTitle");
+    this.messageInput = document.getElementById("messageBody");
+    this.editMessageInput = document.getElementById("editMessageBody");
+    this.addBtn = document.getElementById("addButton");
+    this.btnSaveEdit = document.getElementById("saveEdit");
+    this.scrapsField = document.getElementById("scrapsField");
 
-    // console.log(this.tituloInput, this.mensagemInput, this.adicionar);
-    this.recados = [];
+    this.scraps = [];
 
-    this.registraEventoBtnAdicionar();
+    this.registerAddScrapBtnEvent();
   }
 
-  geraIdRecado() {
-    return this.recados.length + 1;
+  generateScrapId() {
+    return this.scraps.length + 1;
   }
 
-  registraEventoBtnAdicionar() {
-    this.adicionar.onclick = () => this.novaMensagem();
+  registerAddScrapBtnEvent() {
+    this.addBtn.onclick = () => this.addNewScrap();
   }
 
-  botaoEventos() {
-    document.querySelectorAll(".botao-deletar").forEach((item) => {
-      item.onclick = (event) => this.deletaMensagem(event);
+  setButtonEvents() {
+    document.querySelectorAll(".delete-button").forEach((item) => {
+      item.onclick = (event) => this.deleteScrap(event);
     });
 
-    document.querySelectorAll(".botao-editar").forEach((item) => {
+    document.querySelectorAll(".edit-button").forEach((item) => {
       item.onclick = (event) => this.openEditModal(event);
     });
   }
 
-  criarRecados() {
-    this.caixaRecados.innerHTML = "";
+  renderScraps() {
+    this.scrapsField.innerHTML = "";
 
-    for (const recado of this.recados) {
-      const cardHtml = this.criaCartaoMensagem(
-        recado.id, recado.titulo, recado.mensagem
+    for (const scrap of this.scraps) {
+      const cardHtml = this.createScrapCard(
+        scrap.id,
+        scrap.title,
+        scrap.message
       );
 
-      this.inserirHtml(cardHtml);
+      this.insertHtml(cardHtml);
     }
 
-    this.botaoEventos();
+    this.setButtonEvents();
   }
 
-  novaMensagem() {
-    const id = this.geraIdRecado();
-    const titulo = this.tituloInput.value;
-    const mensagem = this.mensagemInput.value;
+  addNewScrap() {
+    const id = this.generateScrapId();
+    const title = this.titleInput.value;
+    const message = this.messageInput.value;
 
-    this.tituloInput.value = "";
-    this.mensagemInput.value = "";
+    this.titleInput.value = "";
+    this.messageInput.value = "";
 
-    this.recados.push({ id, titulo, mensagem })
+    this.scraps.push({ id, title, message });
 
-    // console.log(this.recados);
-
-    this.criarRecados();
+    this.renderScraps();
   }
 
-  deletaMensagem(event) {
+  deleteScrap(event) {
     event.path[2].remove();
 
-    const idRecado = event.path[2].getAttribute("id-scrap");
+    const scrapId = event.path[2].getAttribute("id-scrap");
 
-    const indiceRecado = this.recados.findIndex((item) => {
-      return item.id == idRecado
-    })
+    const scrapIndex = this.scraps.findIndex((item) => {
+      return item.id == scrapId;
+    });
 
-    this.recados.splice(indiceRecado, 1);
+    this.scraps.splice(scrapIndex, 1);
   }
 
-  inserirHtml(html) {
-    this.caixaRecados.innerHTML += html;
+  insertHtml(html) {
+    this.scrapsField.innerHTML += html;
   }
 
   openEditModal(event) {
     $("#editModal").modal("toggle");
 
-    const idRecado = event.path[2].getAttribute("id-scrap");
+    const scrapId = event.path[2].getAttribute("id-scrap");
 
-    const indiceRecado = this.recados.findIndex((item) => {
-      return item.id == idRecado
-    })
-    this.editTexto.value = this.recados[indiceRecado].titulo;
-    this.editMessagem.value = this.recados[indiceRecado].mensagem;
+    const scrapIndex = this.scraps.findIndex((item) => {
+      return item.id == scrapId;
+    });
 
-    this.salveedit.onclick = () => this.saveChanges(indiceRecado);
+    this.editTitleInput.value = this.scraps[scrapIndex].title;
+    this.editMessageInput.value = this.scraps[scrapIndex].message;
+
+    this.btnSaveEdit.onclick = () => this.saveChanges(scrapIndex);
   }
 
-  saveChanges(indiceRecado) {
+  saveChanges(scrapIndex) {
+    let title = this.editTitleInput.value;
+    let message = this.editMessageInput.value;
 
-    let titulo = this.editTexto.value;
-    let mensagem = this.editMessagem.value;
-
-    this.recados[indiceRecado] = { titulo, mensagem };
-    this.criarRecados();
+    this.scraps[scrapIndex] = { title, message };
+    this.renderScraps();
     $("#editModal").modal("hide");
   }
 
-  criaCartaoMensagem(id, titulo, mensagem) {
+  createScrapCard(id, title, message) {
     return `
-    <div class="message-cards card text-white bg-dark m-2 col-3 id-scrap="${id}">
-    <div class="card-header font-weight-bold">${titulo}</div>
-    <div class="card-body">
-      <p class="card-text">
-        ${mensagem}
-      </p>
+    <div class="message-cards card text-white bg-dark m-2 col-3" id-scrap="${id}">
+      <div class="card-header font-weight-bold">${title}</div>
+      <div class="card-body">
+        <p class="card-text">
+          ${message}
+        </p>
+      </div>
+      <div class="w-100 d-flex justify-content-end pr-2 pb-2">
+        <button class="btn btn-danger mr-1 delete-button">Deletar</button>
+        <button class="btn btn-info edit-button">Editar</button>
+      </div>
     </div>
-    <div class="w-100 d-flex justify-content-end pr-2 pb-2">
-      <button class="btn btn-danger mr-1 botao-deletar">Deletar</button>
-    <button class="btn btn-info botao-editar">Editar</button>
-    </div>
-  </div>
-  `;
+    `;
   }
 }
 
-new tasklist();
+new TaskList();

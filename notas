@@ -1,0 +1,19 @@
+- criar processo de deletar scrap
+- quando clicar no botão, scrap deve ser deletado
+- manipular evento de clique
+- ao clicar no botão, função para deletar scrap deve ser disparada
+
+- referenciar botões de deletar que estão na dom
+- como identificá-los? classe.
+- como referenciar os botões? querySelectorAll
+- atribuir para o evento onclick a função que vai deletar recado.
+- fazer loop para executar ação para cada um dos botões.
+- para cada rodada do loop, fazer atribuição da função que vai deletar para todos os botões
+- mandar o evento para a função de delete.
+- retira o card do html utilizando event.path
+- identificar o scrap que deve ser deletado pelo ID.
+- descobrir index do scrap dento do array
+- utilizar método splice para remover o scrap do arra
+
+
+** Methods for accessing elements in the DOM **
