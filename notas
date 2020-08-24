@@ -17,3 +17,14 @@
 
 
 ** Methods for accessing elements in the DOM **
+
+Comandos:
+yarn add webpack --mode development
+
+yarn add webpack-dev-server -D
+
+yarn webpack-dev-server --mode development
+
+Anotações:
+
+yarn add @babel/plugin-transform-runtime -D
