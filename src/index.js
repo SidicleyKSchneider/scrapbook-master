@@ -81,7 +81,7 @@ class TaskList {
     this.renderScraps();
   }
 
-  deleteScrap(event) {
+  async deleteScrap(event) {
     event.path[2].remove();
 
     const scrapId = event.path[2].getAttribute("id-scrap");
@@ -91,6 +91,12 @@ class TaskList {
     });
 
     this.scraps.splice(scrapIndex, 1);
+
+    try {
+      await api.delete(`/scraps/${scrapId}`);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   insertHtml(html) {
@@ -109,16 +115,22 @@ class TaskList {
     this.editTitleInput.value = this.scraps[scrapIndex].title;
     this.editMessageInput.value = this.scraps[scrapIndex].message;
 
-    this.btnSaveEdit.onclick = () => this.saveChanges(scrapIndex);
+    this.btnSaveEdit.onclick = () => this.saveChanges(scrapIndex, scrapId);
   }
 
-  saveChanges(scrapIndex) {
-    let title = this.editTitleInput.value;
-    let message = this.editMessageInput.value;
+  async saveChanges(scrapIndex, scrapId) {
+    try {
+      let title = this.editTitleInput.value;
+      let message = this.editMessageInput.value;
 
-    this.scraps[scrapIndex] = { title, message };
-    this.renderScraps();
-    $("#editModal").modal("hide");
+      const { data: scrap } = await api.put(`/scraps/${scrapId}`, { title, message })
+
+      this.scraps[scrapIndex] = scrap;
+      this.renderScraps();
+      $("#editModal").modal("hide");
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   createScrapCard(id, title, message) {
