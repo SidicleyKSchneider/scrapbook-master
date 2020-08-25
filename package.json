@@ -18,6 +18,7 @@
     "dev": "webpack-dev-server --mode development"
   },
   "dependencies": {
+    "axios": "^0.20.0",
     "babel-loader": "^8.1.0"
   }
 }

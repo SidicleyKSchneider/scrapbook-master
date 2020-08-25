@@ -1,3 +1,12 @@
+import api from "./services/api";
+
+// async function teste() {
+//   const response = await api.get("/scraps");
+
+//   console.log(response);
+// }
+
+// teste();
 class TaskList {
   constructor() {
     this.titleInput = document.getElementById("messageTitle");
@@ -10,12 +19,22 @@ class TaskList {
 
     this.scraps = [];
 
+    this.getScraps();
+
     this.registerAddScrapBtnEvent();
   }
 
-  generateScrapId() {
-    return this.scraps.length + 1;
+
+  async getScraps() {
+    const { data: scraps } = await api.get("/scraps");
+
+    this.scraps = scraps;
+    this.renderScraps();
   }
+
+  // generateScrapId() {
+  //   return this.scraps.length + 1;
+  // }
 
   registerAddScrapBtnEvent() {
     this.addBtn.onclick = () => this.addNewScrap();
@@ -47,13 +66,15 @@ class TaskList {
     this.setButtonEvents();
   }
 
-  addNewScrap() {
-    const id = this.generateScrapId();
-    const title = this.titleInput.value;
-    const message = this.messageInput.value;
+  async addNewScrap() {
+    // const id = this.generateScrapId();
+    const newTitle = this.titleInput.value;
+    const newMessage = this.messageInput.value;
 
     this.titleInput.value = "";
     this.messageInput.value = "";
+
+    const { data: { id, title, message } } = await api.post('/scraps', { title: newTitle, message: newMessage });
 
     this.scraps.push({ id, title, message });
 
